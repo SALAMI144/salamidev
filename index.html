@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Portfolio dynamique de Fayçal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+<style>
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  body {
+    background: #f0f4f8;
+    color: #222;
+    scroll-behavior: smooth;
+  }
+  header {
+    background: linear-gradient(135deg, #4a90e2, #50e3c2);
+    color: white;
+    text-align: center;
+    padding: 6rem 1rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header h1 {
+    font-weight: 700;
+    font-size: 3.5rem;
+    opacity: 0;
+    transform: translateY(-30px);
+    animation: fadeSlideDown 1s ease forwards;
+  }
+  header p {
+    margin-top: 1rem;
+    font-weight: 300;
+    font-size: 1.3rem;
+    opacity: 0;
+    animation: fadeSlideUp 1s ease 0.6s forwards;
+  }
+  nav {
+    position: sticky;
+    top: 0;
+    background: white;
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 1rem 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  nav a {
+    color: #4a90e2;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    padding-bottom: 5px;
+    transition: color 0.3s;
+  }
+  nav a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: #50e3c2;
+    transition: width 0.3s ease;
+    border-radius: 3px;
+  }
+  nav a:hover, nav a.active {
+    color: #50e3c2;
+  }
+  nav a:hover::after, nav a.active::after {
+    width: 100%;
+  }
+
+  section {
+    max-width: 900px;
+    margin: 5rem auto;
+    padding: 0 1rem;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  section h2 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #4a90e2;
+    letter-spacing: 1.2px;
+  }
+
+  /* About */
+  #apropos p {
+    font-size: 1.2rem;
+    max-width: 650px;
+    margin: auto;
+    color: #444;
+    line-height: 1.7;
+  }
+
+  /* Projects */
+  #projets .grid {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem 1.8rem;
+    box-shadow: 0 12px 20px rgb(74 144 226 / 0.15);
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    left: -30%;
+    width: 160%;
+    height: 200%;
+    background: linear-gradient(120deg, rgba(80,227,194,0.3), rgba(74,144,226,0.2));
+    transform: rotate(25deg);
+    transition: transform 0.6s ease;
+    z-index: 0;
+  }
+  .card:hover::before {
+    transform: rotate(25deg) translateX(30%);
+  }
+  .card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 24px 36px rgb(80 227 194 / 0.4);
+    z-index: 10;
+  }
+  .card h3 {
+    position: relative;
+    color: #4a90e2;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: 1.6rem;
+    z-index: 1;
+  }
+  .card p {
+    position: relative;
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    z-index: 1;
+  }
+
+  /* Skills with animated bars */
+  #competences ul {
+    max-width: 650px;
+    margin: auto;
+    list-style: none;
+    padding: 0;
+  }
+  #competences li {
+    margin-bottom: 1.8rem;
+  }
+  #competences li span.skill-name {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #4a90e2;
+  }
+  .skill-bar {
+    background: #ddd;
+    border-radius: 12px;
+    height: 18px;
+    overflow: hidden;
+  }
+  .skill-bar > div {
+    height: 100%;
+    background: linear-gradient(90deg, #4a90e2, #50e3c2);
+    width: 0;
+    border-radius: 12px;
+    transition: width 1.5s ease;
+  }
+
+  /* Contact */
+  form {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  html{
+    scroll-behavior: smooth;
+  }
+  form input, form textarea {
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid #4a90e2;
+    border-radius: 10px;
+    resize: none;
+    transition: border-color 0.3s ease;
+  }
+  form input:focus, form textarea:focus {
+    outline: none;
+    border-color: #50e3c2;
+    box-shadow: 0 0 8px #50e3c2;
+  }
+  form button {
+    background: #4a90e2;
+    color: white;
+    font-weight: 700;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form button:hover {
+    background-color: #50e3c2;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #4a90e2;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+a{
+    text-decoration: none;
+}
+  /* Animations */
+  @keyframes fadeSlideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Bonjour je suis Fayçal SALAMI</h1>
+  <p>Développeur Web & Mobile – Créateur de solutions numérique</p>
+</header>
+
+<nav>
+  <a href="#apropos" class="active">À propos</a>
+  <a href="#projets">Projets</a>
+  <a href="#competences">Compétences</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section id="apropos" class="reveal">
+  <h2>À propos de moi</h2>
+  <center><img src="team-1.png" alt="" width="60%"></center>
+  <p>Je suis un développeur web et mobile passionné par les technologies modernes. J’aime créer des interfaces belles, rapides et efficaces pour améliorer le quotidien des utilisateurs. En formation continue, je développe des projets personnels pour progresser et collaborer avec d'autres passionnés du numérique.</p>
+</section>
+
+<section id="projets" class="reveal">
+  <h2>Projets a réalisés a l'avenir</h2>
+  <div class="grid">
+    <article class="card" tabindex="0" aria-label="Projet Plateforme scolaire">
+      <h3>Plateforme scolaire</h3>
+      <p>Un site pour les écoles permettant aux élèves de consulter certificats et bulletins en ligne. HTML, CSS, JS, Firebase.</p>
+    </article>
+    <article class="card" tabindex="0" aria-label="Projet Jeu de quiz">
+      <h3>Jeu de quiz</h3>
+      <p>Application Web avec questions, score et chrono. Responsive et 100% JavaScript natif.</p>
+    </article>
+    <article class="card" tabindex="0" aria-label="Projet Appli mobile de gestion">
+      <h3>Appli mobile de gestion</h3>
+      <p>Créée avec Flutter. Elle aide les vendeurs à gérer stock, ventes et clients.</p>
+    </article>
+  </div>
+</section>
+
+<section id="competences" class="reveal">
+  <h2>Compétences techniques</h2>
+  <ul>
+    <li>
+      <span class="skill-name">HTML5 / CSS3 / JavaScript</span>
+      <div class="skill-bar"><div data-level="90%"></div></div>
+    </li>
+    <li>
+      <span class="skill-name">React.js, TailwindCSS, Bootstrap</span>
+      <div class="skill-bar"><div data-level="80%"></div></div>
+    </li>
+    <li>
+      <span class="skill-name">Flutter & Dart (Mobile)</span>
+      <div class="skill-bar"><div data-level="65%"></div></div>
+    </li>
+    <li>
+      <span class="skill-name">Firebase / MySQL</span>
+      <div class="skill-bar"><div data-level="75%"></div></div>
+    </li>
+    <li>
+      <span class="skill-name">Git / GitHub</span>
+      <div class="skill-bar"><div data-level="85%"></div></div>
+    </li>
+    <li>
+      <span class="skill-name">Responsive Design</span>
+      <div class="skill-bar"><div data-level="95%"></div></div>
+    </li>
+  </ul>
+</section>
+
+<section id="contact" class="reveal">
+  <h2>Me contacter</h2>
+  <form onsubmit="event.preventDefault(); alert('Merci pour votre message, je vous répondrai bientôt !'); this.reset();">
+    <input type="text" placeholder="Votre nom" required aria-label="Votre nom" />
+    <input type="email" placeholder="Votre email" required aria-label="Votre email" />
+    <textarea rows="5" placeholder="Votre message" required aria-label="Votre message"></textarea>
+    <button type="submit">Envoyer</button>
+  </form>
+</section>
+
+<footer>
+  <p>&copy; 2025 Fayçal | Développeur Web & Mobile</p>
+</footer>
+
+<script>
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('nav a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 120;
+      if (pageYOffset >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+
+  // Reveal on scroll
+  function reveal() {
+    const reveals = document.querySelectorAll('.reveal');
+    for (let i = 0; i < reveals.length; i++) {
+      const windowHeight = window.innerHeight;
+      const revealTop = reveals[i].getBoundingClientRect().top;
+      const revealPoint = 150;
+      if (revealTop < windowHeight - revealPoint) {
+        reveals[i].classList.add('visible');
+      }
+    }
+  }
+  window.addEventListener('scroll', reveal);
+  window.addEventListener('load', () => {
+    reveal();
+    animateSkills();
+  });
+
+  // Animate skill bars
+  function animateSkills() {
+    const skillBars = document.querySelectorAll('.skill-bar > div');
+    skillBars.forEach(bar => {
+      const level = bar.getAttribute('data-level');
+      setTimeout(() => {
+        bar.style.width = level;
+      }, 600);
+    });
+  }
+</script>
+
+</body>
+</html>
+
+
+Vous
